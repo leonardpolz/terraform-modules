@@ -1,28 +1,15 @@
 variable "network_security_groups" {
   type = set(object({
-    tf_id = string
-
-    name_config = object({
-      parent_name   = optional(string)
-      name_segments = map(string)
-    })
-
-    nc_bypass = optional(string)
-
+    tf_id               = string
+    name                = string
     resource_group_name = string
-    location            = optional(string)
+    location            = string
     tags                = optional(map(string))
 
     security_rules = optional(list(object({
       tf_id = string
 
-      name_config = object({
-        name_segments = map(string)
-        parent_name   = optional(string)
-      })
-
-      nc_bypass = optional(string)
-
+      name                                       = string
       description                                = string
       protocol                                   = string
       source_port_range                          = optional(string)

@@ -8,16 +8,7 @@ run "plan" {
   variables {
     network_security_groups = [{
       tf_id = "test_nsg"
-
-      name_config = {
-        name_segments = {
-          workload_name = "test-nsg"
-          environment   = "test"
-        }
-      }
-
-      nc_bypass = "test-nsg"
-
+      name = "test-nsg"
       tags = {
         terraform_repository_uri = "https://github.com/leonardpolz/terraform-governance-framework-core-modules.git"
         deployed_by              = "Leonard Polz"

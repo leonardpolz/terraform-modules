@@ -6,15 +6,7 @@ variables {
   route_tables = [{
     tf_id = "test_route_table"
 
-    name_config = {
-      name_segments = {
-        workload_name = "example"
-        environment   = "tst"
-      }
-    }
-
-    nc_bypass = "test-route-table"
-
+    name = "test-route-table"
     tags = {
       terraform_repository_uri = "https://github.com/leonardpolz/terraform-governance-framework-core-modules.git"
       deployed_by              = "Leonard Polz"

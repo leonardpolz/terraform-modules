@@ -2,42 +2,22 @@ variable "private_endpoints" {
   type = set(object({
     tf_id = string
 
-    name_config = object({
-      parent_name   = optional(string)
-      name_segments = map(string)
-    })
-
-    nc_bypass = optional(string)
-
+    name                = string
     resource_group_name = string
-    location            = optional(string)
+    location            = string
     subnet_id           = string
 
-    custom_network_interface_name_config = optional(object({
-      values = map(string)
-    }))
-
-    custom_network_interface_nc_bypass = optional(string)
+    custom_network_interface_name = optional(string)
 
     tags = optional(map(string))
 
     private_dns_zone_group = optional(object({
-      name_config = optional(object({
-        values = map(string)
-      }))
-
-      nc_bypass = optional(string)
-
+      name                 = optional(string, "pdzg-default")
       private_dns_zone_ids = set(string)
     }))
 
     private_service_connection = object({
-      name_config = optional(object({
-        values = map(string)
-      }))
-
-      nc_bypass = optional(string)
-
+      name                              = optional(string, "psc-default")
       is_manual_connection              = optional(bool, false)
       private_connection_resource_id    = optional(string)
       private_connection_resource_alias = optional(string)
@@ -46,12 +26,7 @@ variable "private_endpoints" {
     })
 
     ip_configuration = optional(object({
-      name_config = optional(object({
-        values = map(string)
-      }))
-
-      nc_bypass = optional(string)
-
+      name               = optional(string, "ipc-default")
       private_ip_address = string
       subresource_name   = optional(string)
       member_name        = optional(string)

@@ -5,14 +5,8 @@ provider "azurerm" {
 variables {
   resource_groups = [{
     tf_id = "test_rg"
-    name_config = {
-      name_segments = {
-        workload_name = "test"
-        environment   = "dev"
-      }
-    }
 
-    nc_bypass = "test-rg"
+    name = "test-rg"
     location  = "westeurope"
     
     tags = {

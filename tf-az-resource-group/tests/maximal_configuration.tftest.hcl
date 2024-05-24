@@ -6,15 +6,8 @@ variables {
   resource_groups = [
     {
       tf_id = "test_rg"
-      name_config = {
-        name_segments = {
-          workload_name = "test"
-          environment   = "dev"
-        }
-      }
 
-      nc_bypass = "test-rg"
-
+      name = "test-rg"
       location   = "westeurope"
       managed_by = "test"
 
@@ -37,15 +30,8 @@ variables {
     },
     {
       tf_id = "test_rg_2"
-      name_config = {
-        name_segments = {
-          workload_name = "test"
-          environment   = "dev"
-        }
-      }
-
-      nc_bypass = "test-rg"
-
+      
+      name = "test-rg"
       location   = "westeurope"
       managed_by = "test"
 

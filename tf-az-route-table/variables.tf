@@ -2,28 +2,15 @@ variable "route_tables" {
   type = set(object({
     tf_id = string
 
-    name_config = object({
-      parent_name   = optional(string)
-      name_segments = map(string)
-    })
-
-    nc_bypass = optional(string)
-
+    name                          = string
     resource_group_name           = string
-    location                      = optional(string)
+    location                      = string
     disable_bgp_route_propagation = optional(bool)
     tags                          = optional(map(string))
 
     routes = optional(set(object({
-      tf_id = string
-
-      name_config = object({
-        name_segments = map(string)
-        parent_name   = optional(string)
-      })
-
-      nc_bypass = optional(string)
-
+      tf_id                  = string
+      name                   = optional(string)
       address_prefix         = string
       next_hop_type          = string
       next_hop_in_ip_address = optional(string)

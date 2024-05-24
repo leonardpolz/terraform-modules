@@ -8,16 +8,7 @@ run "plan" {
   variables {
     private_endpoints = [{
       tf_id = "test_pep"
-
-      name_config = {
-         name_segments = {
-          workload_name = "testendpoint"
-          environment   = "test"
-        }
-      }
-
-      nc_bypass = "test-pep"
-
+      name = "test-pep"
       tags = {
         terraform_repository_uri = "https://github.com/leonardpolz/terraform-governance-framework-core-modules.git"
         deployed_by              = "Leonard Polz"

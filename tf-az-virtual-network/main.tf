@@ -1,52 +1,5 @@
-module "configuration_interceptor" {
-  source = "../tf-governance-interceptor"
-  configurations = [for vnet in var.virtual_networks : {
-    tf_id                = vnet.tf_id
-    resource_type        = "Microsoft.Network/virtualNetworks"
-    resource_config_json = jsonencode(vnet)
-    }
-  ]
-}
-
 locals {
-  virtual_network_map = {
-    for vnet in var.virtual_networks : vnet.tf_id => merge(
-      vnet, {
-        name     = module.configuration_interceptor.configuration_map[vnet.tf_id].name
-        tags     = module.configuration_interceptor.configuration_map[vnet.tf_id].tags
-        location = module.configuration_interceptor.configuration_map[vnet.tf_id].location
-
-        subnets = [
-          for snet in vnet.subnets != null ? vnet.subnets : [] : merge(
-            snet, {
-              name = module.configuration_interceptor.configuration_map[vnet.tf_id].subnets[snet.tf_id].name
-              network_security_group_settings = merge(
-                snet.network_security_group_settings, {
-                  tags = module.configuration_interceptor.configuration_map[vnet.tf_id].subnets[snet.tf_id].network_security_group_settings.tags
-                }
-              )
-
-              delegations = [
-                for index, del in snet.delegations != null ? snet.delegations : [] : merge(
-                  del, {
-                    name = module.configuration_interceptor.configuration_map[vnet.tf_id].subnets[snet.tf_id].delegations[index].name
-                  }
-                )
-              ]
-            }
-          )
-        ]
-
-        virtual_network_peerings = [
-          for vnetp in vnet.virtual_network_peerings != null ? vnet.virtual_network_peerings : [] : merge(
-            vnetp, {
-              name = module.configuration_interceptor.configuration_map[vnet.tf_id].virtual_network_peerings[vnetp.tf_id].name
-            }
-          )
-        ]
-      }
-    )
-  }
+  virtual_network_map = { for vnet in var.virtual_networks : vnet.tf_id => vnet }
 }
 
 resource "azurerm_virtual_network" "virtual_networks" {
@@ -98,7 +51,7 @@ locals {
 
 resource "azurerm_subnet" "subnets" {
   for_each                                      = local.subnet_map
-  name                                          = each.value.nc_bypass != null ? each.value.nc_bypass : each.value.name
+  name                                          = each.value.name
   resource_group_name                           = each.value.resource_group_name
   virtual_network_name                          = azurerm_virtual_network.virtual_networks[each.value.vnet_tf_id].name
   address_prefixes                              = each.value.address_prefixes
@@ -129,12 +82,8 @@ module "network_security_groups" {
     for key, snet in local.subnet_map : merge(
       snet.network_security_group_settings,
       {
-        tf_id = key
-        name_config = {
-          name_segments = try(snet.network_security_group_settings.name_config.name_segments, null) != null ? snet.network_security_group_settings.name_config.name_segments : {}
-          parent_name   = azurerm_virtual_network.virtual_networks[snet.vnet_tf_id].name
-        }
-
+        tf_id               = key
+        name                = snet.network_security_group_settings.name
         resource_group_name = try(snet.network_security_group_settings.resource_group_name, null) != null ? snet.network_security_group_settings.resource_group_name : azurerm_virtual_network.virtual_networks[snet.vnet_tf_id].resource_group_name
         location            = try(snet.network_security_group_settings.location, null) != null ? snet.network_security_group_settings.location : azurerm_virtual_network.virtual_networks[snet.vnet_tf_id].location
       }
@@ -182,7 +131,7 @@ locals {
 
 resource "azurerm_virtual_network_peering" "virtual_network_peerings" {
   for_each                     = { for vnetp in local.virtual_network_peering_list : vnetp.tf_id => vnetp }
-  name                         = each.value.nc_bypass != null ? each.value.nc_bypass : each.value.name
+  name                         = each.value.name
   virtual_network_name         = azurerm_virtual_network.virtual_networks[each.value.vnet_tf_id].name
   remote_virtual_network_id    = each.value.remote_virtual_network_id
   resource_group_name          = each.value.resource_group_name

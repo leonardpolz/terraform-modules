@@ -1,20 +1,13 @@
 variable "mssql_managed_instances" {
   type = set(object({
-    tf_id = string
-
-    name_config = object({
-      parent_name   = optional(string)
-      name_segments = map(string)
-    })
-
-    nc_bypass = optional(string)
-
+    tf_id                          = string
+    name                           = string
     administrator_login            = string
     administrator_login_password   = string
-    license_type                   = optional(string)
-    location                       = optional(string)
+    location                       = string
+    license_type                   = string
     resource_group_name            = string
-    sku_name                       = optional(string)
+    sku_name                       = string
     storage_size_in_gb             = string
     vcores                         = string
     collation                      = optional(string)
@@ -43,15 +36,8 @@ variable "mssql_managed_instances" {
     connectivity_settings = optional(object({
       subnet_id_bypass = optional(string)
 
-      route_table_config = optional(object({
-        parent_name = optional(string)
-
-        name_config = optional(object({
-          values = map(string)
-        }))
-
-        nc_bypass = optional(string)
-
+      route_table_config = object({
+        name                          = string
         resource_group_name           = optional(string)
         location                      = optional(string)
         disable_bgp_route_propagation = optional(bool)
@@ -60,12 +46,7 @@ variable "mssql_managed_instances" {
 
         routes = optional(set(object({
           tf_id = string
-
-          name_config = object({
-            values = map(string)
-          })
-
-          nc_bypass = optional(string)
+          name  = optional(string)
 
           address_prefix         = string
           next_hop_type          = string
@@ -84,17 +65,12 @@ variable "mssql_managed_instances" {
           description                            = optional(string)
           skip_service_principal_aad_check       = optional(bool)
         })))
-      }))
+      })
 
-      virtual_network_config = optional(object({
-        name_config = optional(object({
-          values = map(string)
-        }))
-
-        nc_bypass = optional(string)
-
+      virtual_network_config = object({
+        name                    = string
+        address_space           = set(string)
         resource_group_name     = optional(string)
-        address_space           = optional(set(string))
         location                = optional(string)
         bgp_community           = optional(string)
         edge_zone               = optional(string)
@@ -113,13 +89,8 @@ variable "mssql_managed_instances" {
         dns_servers = optional(set(string))
 
         subnets = optional(set(object({
-          tf_id = string
-
-          name_config = object({
-            values = map(string)
-          })
-
-          nc_bypass                                     = optional(string)
+          tf_id                                         = string
+          name                                          = string
           address_prefixes                              = set(string)
           private_endpoint_network_policies_enabled     = optional(bool)
           private_link_service_network_policies_enabled = optional(bool)
@@ -127,37 +98,22 @@ variable "mssql_managed_instances" {
           service_endpoint_policy_ids                   = optional(set(string))
 
           delegations = optional(set(object({
-            name_config = object({
-              values = map(string)
-            })
 
-            nc_bypass = optional(string)
-
+            name = string
             service_delegation = object({
               name    = string
               actions = optional(set(string))
             })
           })))
 
-          network_security_group_settings = optional(object({
-            name_config = object({
-              values = map(string)
-            })
-
-            nc_bypass = optional(string)
-
+          network_security_group_settings = object({
+            name                = string
             resource_group_name = optional(string)
             location            = optional(string)
 
             security_rules = optional(list(object({
-              tf_id = string
-
-              name_config = object({
-                values = map(string)
-              })
-
-              nc_bypass = optional(string)
-
+              tf_id                                      = string
+              name                                       = string
               description                                = string
               protocol                                   = string
               source_port_range                          = optional(string)
@@ -187,7 +143,7 @@ variable "mssql_managed_instances" {
               description                            = optional(string)
               skip_service_principal_aad_check       = optional(bool)
             })))
-          }))
+          })
 
           route_table_associations = optional(list(object({
             tf_id          = string
@@ -196,13 +152,8 @@ variable "mssql_managed_instances" {
         })))
 
         virtual_network_peerings = optional(set(object({
-          tf_id = string
-
-          name_config = object({
-            values = map(string)
-          })
-
-          nc_bypass                    = optional(string)
+          tf_id                        = string
+          name                         = string
           remote_virtual_network_id    = string
           allow_virtual_network_access = optional(bool)
           allow_forwarded_traffic      = optional(bool)
@@ -222,14 +173,10 @@ variable "mssql_managed_instances" {
           description                            = optional(string)
           skip_service_principal_aad_check       = optional(bool)
         })))
-      }))
+      })
 
-      sqlmi_subnet_config = optional(object({
-        name_config = optional(object({
-          values = map(string)
-        }))
-
-        nc_bypass                                     = optional(string)
+      sqlmi_subnet_config = object({
+        name                                          = string
         address_prefixes                              = optional(set(string))
         private_endpoint_network_policies_enabled     = optional(bool)
         private_link_service_network_policies_enabled = optional(bool)
@@ -237,12 +184,7 @@ variable "mssql_managed_instances" {
         service_endpoint_policy_ids                   = optional(set(string))
 
         delegations = optional(set(object({
-          name_config = object({
-            values = map(string)
-          })
-
-          nc_bypass = optional(string)
-
+          name = string
           service_delegation = object({
             name    = string
             actions = optional(set(string))
@@ -250,24 +192,13 @@ variable "mssql_managed_instances" {
         })))
 
         network_security_group_settings = optional(object({
-          name_config = object({
-            values = map(string)
-          })
-
-          nc_bypass = optional(string)
-
+          name                = string
           resource_group_name = optional(string)
           location            = optional(string)
 
           security_rules = optional(list(object({
-            tf_id = string
-
-            name_config = object({
-              values = map(string)
-            })
-
-            nc_bypass = optional(string)
-
+            tf_id                                      = string
+            name                                       = string
             description                                = string
             protocol                                   = string
             source_port_range                          = optional(string)
@@ -303,18 +234,13 @@ variable "mssql_managed_instances" {
           tf_id          = string
           route_table_id = string
         })))
-      }))
+      })
 
       private_endpoints = optional(set(object({
         tf_id = string
 
         private_endpoint_config = object({
-          name_config = optional(object({
-            values = map(string)
-          }))
-
-          nc_bypass = optional(string)
-
+          name                = string
           resource_group_name = optional(string)
           location            = optional(string)
           subnet_id           = string
@@ -328,33 +254,19 @@ variable "mssql_managed_instances" {
           tags = optional(map(string))
 
           private_dns_zone_group = optional(object({
-            name_config = optional(object({
-              values = map(string)
-            }))
-
-            nc_bypass = optional(string)
+            name = string
 
             private_dns_zone_ids = set(string)
           }))
 
           private_service_connection = optional(object({
-            name_config = optional(object({
-              values = map(string)
-            }))
-
-            nc_bypass = optional(string)
-
+            name                 = string
             is_manual_connection = optional(bool, false)
             request_message      = optional(string)
           }))
 
           ip_configuration = optional(object({
-            name_config = optional(object({
-              values = map(string)
-            }))
-
-            nc_bypass = optional(string)
-
+            name               = string
             private_ip_address = string
             member_name        = optional(string)
           }))

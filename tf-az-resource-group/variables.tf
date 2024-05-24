@@ -2,14 +2,8 @@ variable "resource_groups" {
   type = set(object({
     tf_id = string
 
-    name_config = object({
-      parent_name   = optional(string)
-      name_segments = map(string)
-    })
-
-    nc_bypass = optional(string)
-
-    location   = optional(string)
+    name       = string
+    location   = string
     managed_by = optional(string)
     tags       = optional(map(string))
 

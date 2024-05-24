@@ -9,15 +9,7 @@ run "plan" {
     private_endpoints = [
       {
         tf_id = "test_pep"
-
-        name_config = {
-          name_segments = {
-            workload_name = "testendpoint"
-            environment   = "test"
-          }
-        }
-
-        nc_bypass = "test-pep"
+        name = "test-pep"
 
         tags = {
           terraform_repository_uri = "https://github.com/leonardpolz/terraform-governance-framework-core-modules.git"
@@ -40,23 +32,23 @@ run "plan" {
         location            = "germanywestcentral"
         subnet_id           = "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg-mock-group/providers/Microsoft.Network/virtualNetworks/vnet-mock-network/subnets/snet-mock-subnet"
 
-        custom_network_interface_nc_bypass = "test-nic"
+        custom_network_interface_name = "test-nic"
         private_dns_zone_group = {
-          nc_bypass = "test-dns-zone-group"
+          name = "test-dns-zone-group"
           private_dns_zone_ids = [
             "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/myResourceGroup/providers/Microsoft.Network/privateDnsZones/myprivatedns.zone"
           ]
         }
 
         private_service_connection = {
-          nc_bypass                      = "test-service-connection"
+          name                      = "test-service-connection"
           private_connection_resource_id = "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg-mock-group/providers/Microsoft.Network/virtualNetworks/vnet-mock-network/subnets/snet-mock-subnet"
           subresource_names              = ["test"]
           request_message                = "test"
         }
 
         ip_configuration = {
-          nc_bypass          = "test-ip-config"
+          name          = "test-ip-config"
           private_ip_address = "0.0.0.0"
           subresource_name   = "test"
           member_name        = "test"
@@ -65,15 +57,7 @@ run "plan" {
       {
         tf_id = "test_pep_2"
 
-        name_config = {
-          name_segments = {
-            workload_name = "testendpoint"
-            environment   = "test"
-          }
-        }
-
-        nc_bypass = "test-pep"
-
+        name = "test-pep"
         tags = {
           terraform_repository_uri = "https://github.com/leonardpolz/terraform-governance-framework-core-modules.git"
           deployed_by              = "Leonard Polz"
@@ -95,7 +79,7 @@ run "plan" {
         location            = "germanywestcentral"
         subnet_id           = "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg-mock-group/providers/Microsoft.Network/virtualNetworks/vnet-mock-network/subnets/snet-mock-subnet"
 
-        custom_network_interface_nc_bypass = "test-nic"
+        custom_network_interface_name = "test-nic"
         private_dns_zone_group = {
           name = "test-dns-zone-group"
           private_dns_zone_ids = [

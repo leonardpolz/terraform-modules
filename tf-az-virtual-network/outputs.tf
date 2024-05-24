@@ -17,7 +17,3 @@ output "virtual_network_peerings" {
 output "role_assignments" {
   value = module.role_assignments.role_assignments
 }
-
-output "virtual_network_config_map" {
-  value = module.configuration_interceptor.configuration_map
-}

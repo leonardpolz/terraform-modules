@@ -9,15 +9,7 @@ run "plan" {
     virtual_networks = [
       {
         tf_id = "test_vnet"
-
-        name_config = {
-          name_segments = {
-            environment   = "tst"
-            workload_name = "test-vnet"
-          }
-        }
-
-        nc_bypass = "test-vnet"
+        name = "test-vnet"
 
         tags = {
           terraform_repository_uri = "https://github.com/leonardpolz/terraform-governance-framework-core-modules.git"
@@ -46,14 +38,7 @@ run "plan" {
         subnets = [
           {
             tf_id = "default"
-
-            name_config = {
-              name_segments = {
-                workload_name = "test"
-              }
-            }
-
-            nc_bypass = "test-snet"
+            name = "test-snet"
 
             address_prefixes                              = ["10.100.10.0/24"]
             private_endpoint_network_policies_enabled     = true
@@ -63,13 +48,7 @@ run "plan" {
 
             delegations = [
               {
-                name_config = {
-                  name_segments = {
-                    workload_name = "test"
-                  }
-                }
-
-                nc_bypass = "test-delegation"
+                name = "test-delegation"
 
                 service_delegation = {
                   name    = "Microsoft.ApiManagement/service"
@@ -93,11 +72,7 @@ run "plan" {
             ]
 
             network_security_group_settings = {
-              name_config = {
-                name_segments = {}
-              }
-
-              nc_bypass = "test-nsg"
+              name = "test-nsg"
 
               security_rules = [
                 {
@@ -109,8 +84,7 @@ run "plan" {
                     }
                   }
 
-                  nc_bypass = "test-nsg-rule"
-
+                  name = "test-nsg-rule"
                   description                = "Allow inbound traffic on port 80"
                   protocol                   = "Tcp"
                   source_port_range          = "33"
@@ -139,15 +113,7 @@ run "plan" {
       },
       {
         tf_id = "test_vnet_2"
-
-        name_config = {
-          name_segments = {
-            environment   = "tst"
-            workload_name = "test-vnet"
-          }
-        }
-
-        nc_bypass = "test-vnet"
+        name = "test-vnet"
 
         tags = {
           terraform_repository_uri = "https://github.com/leonardpolz/terraform-governance-framework-core-modules.git"
@@ -176,13 +142,7 @@ run "plan" {
         subnets = [
           {
             tf_id = "default"
-
-            name_config = {
-              name_segments = {}
-            }
-
-            nc_bypass = "test-snet"
-
+            name = "test-snet"
             address_prefixes                              = ["10.100.10.0/24"]
             private_endpoint_network_policies_enabled     = true
             private_link_service_network_policies_enabled = true
@@ -191,14 +151,7 @@ run "plan" {
 
             delegations = [
               {
-                name_config = {
-                  name_segments = {
-                    workload_name = "test"
-                  }
-                }
-
-                nc_bypass = "test-delegation"
-
+                name = "test-delegation"
                 service_delegation = {
                   name    = "Microsoft.ApiManagement/service"
                   actions = ["Microsoft.Network/networkinterfaces/*"]
@@ -219,6 +172,11 @@ run "plan" {
                 route_table_id = "/subscriptions/abcd1234-5678-90ab-cdef-1234567890ab/resourceGroups/ExampleResourceGroup/providers/Microsoft.Network/routeTables/ExampleRouteTable"
               }
             ]
+
+            network_security_group_settings = {
+              name = "test-nsg"
+            }
+
           }
         ]
 

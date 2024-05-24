@@ -9,16 +9,7 @@ run "plan" {
     network_security_groups = [
       {
         tf_id       = "test_nsg"
-        parent_name = "example-parent"
-
-        name_config = {
-          name_segments = {
-            workload_name = "test-nsg"
-            environment   = "test"
-          }
-        }
-
-        nc_bypass = "test-nsg"
+        name = "test-nsg"
 
         tags = {
           terraform_repository_uri = "https://github.com/leonardpolz/terraform-governance-framework-core-modules.git"
@@ -43,15 +34,7 @@ run "plan" {
         security_rules = [
           {
             tf_id = "test_nsg_rule"
-
-            name_config = {
-              name_segments = {
-                workload_name = "test-nsg-rule"
-              }
-            }
-
-            nc_bypass = "test-nsg-rule"
-
+            name = "test-nsg-rule"
             description                = "Allow inbound traffic on port 80"
             protocol                   = "Tcp"
             source_port_range          = "33"
@@ -66,17 +49,7 @@ run "plan" {
       },
       {
         tf_id       = "test_nsg_2"
-        parent_name = "example-parent"
-
-        name_config = {
-          name_segments = {
-            workload_name = "test-nsg"
-            environment   = "test"
-          }
-        }
-
-        nc_bypass = "test-nsg"
-
+        name = "test-nsg"
         tags = {
           terraform_repository_uri = "https://github.com/leonardpolz/terraform-governance-framework-core-modules.git"
           deployed_by              = "Leonard Polz"
@@ -100,14 +73,7 @@ run "plan" {
         security_rules = [
           {
             tf_id = "test_nsg_rule"
-
-            name_config = {
-              name_segments = {
-                workload_name = "test-nsg-rule"
-              }
-            }
-
-            nc_bypass = "test-nsg-rule"
+            name = "test-nsg-rule"
 
             description                = "Allow inbound traffic on port 80"
             protocol                   = "Tcp"

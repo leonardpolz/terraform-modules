@@ -9,7 +9,3 @@ output "routes" {
 output "role_assignments" {
   value = module.role_assignments.role_assignments
 }
-
-output "route_table_config_map" {
-  value = module.configuration_interceptor.configuration_map
-}

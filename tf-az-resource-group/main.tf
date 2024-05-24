@@ -1,22 +1,5 @@
-module "configuration_interceptor" {
-  source = "../tf-governance-interceptor"
-  configurations = [for rg in var.resource_groups : {
-    tf_id                = rg.tf_id
-    resource_type        = "Microsoft.Resources/resourceGroups"
-    resource_config_json = jsonencode(rg)
-    }
-  ]
-}
-
 locals {
-  resource_group_map = {
-    for rg in var.resource_groups : rg.tf_id => merge(
-      rg, {
-        name     = module.configuration_interceptor.configuration_map[rg.tf_id].name
-        tags     = module.configuration_interceptor.configuration_map[rg.tf_id].tags
-        location = module.configuration_interceptor.configuration_map[rg.tf_id].location
-    })
-  }
+  resource_group_map = { for rg in var.resource_groups : rg.tf_id => rg }
 }
 
 resource "azurerm_resource_group" "resource_groups" {

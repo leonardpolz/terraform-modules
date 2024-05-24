@@ -1,41 +1,5 @@
-module "configuration_interceptor" {
-  source = "../tf-governance-interceptor"
-  configurations = [for pep in var.private_endpoints : {
-    tf_id                = pep.tf_id
-    resource_type        = "Microsoft.Network/privateEndpoints"
-    resource_config_json = jsonencode(pep)
-    }
-  ]
-}
-
 locals {
-  private_endpoint_map = {
-    for pep in var.private_endpoints : pep.tf_id => merge(
-      pep, {
-        name                          = module.configuration_interceptor.configuration_map[pep.tf_id].name
-        custom_network_interface_name = module.configuration_interceptor.configuration_map[pep.tf_id].custom_network_interface_name
-        tags                          = module.configuration_interceptor.configuration_map[pep.tf_id].tags
-        location                      = module.configuration_interceptor.configuration_map[pep.tf_id].location
-
-        private_dns_zone_group = pep.private_dns_zone_group == null ? null : merge(
-          pep.private_dns_zone_group, {
-            name = module.configuration_interceptor.configuration_map[pep.tf_id].private_dns_zone_group.name
-          }
-        )
-
-        private_service_connection = pep.private_service_connection == null ? null : merge(
-          pep.private_service_connection, {
-            name = module.configuration_interceptor.configuration_map[pep.tf_id].private_service_connection.name
-        })
-
-        ip_configuration = pep.ip_configuration == null ? null : merge(
-          pep.ip_configuration, {
-            name = module.configuration_interceptor.configuration_map[pep.tf_id].ip_configuration.name
-          }
-        )
-      }
-    )
-  }
+  private_endpoint_map = { for pep in var.private_endpoints : pep.tf_id => pep }
 }
 
 resource "azurerm_private_endpoint" "private_endpoints" {

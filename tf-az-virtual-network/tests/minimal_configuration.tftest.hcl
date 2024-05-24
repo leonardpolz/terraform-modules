@@ -9,15 +9,8 @@ run "plan" {
     virtual_networks = [
       {
         tf_id = "test_vnet"
-
-        name_config = {
-          name_segments = {
-            environment   = "tst"
-            workload_name = "test-vnet"
-          }
-        }
-
-        nc_bypass = "test-vnet"
+        name = "test-vnet"
+        location = "germanywestcentral"
 
         tags = {
           terraform_repository_uri = "https://github.com/leonardpolz/terraform-governance-framework-core-modules.git"
@@ -36,6 +29,10 @@ run "plan" {
     error_message = "Virtual network name '${azurerm_virtual_network.virtual_networks["test_vnet"].name}' does not match expected value 'test-vnet'"
   }
 
+  assert {
+    condition     = azurerm_virtual_network.virtual_networks["test_vnet"].location == "germanywestcentral"
+    error_message = "Virtual network location '${azurerm_virtual_network.virtual_networks["test_vnet"].location}' does not match expected value 'germanywestcentral'"
+  }
 
   assert {
     condition     = azurerm_virtual_network.virtual_networks["test_vnet"].resource_group_name == "test-rg"

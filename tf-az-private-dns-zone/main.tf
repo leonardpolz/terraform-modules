@@ -1,27 +1,5 @@
-module "configuration_interceptor" {
-  source = "../tf-governance-interceptor"
-  configurations = [for pdz in var.private_dns_zones : {
-    tf_id         = pdz.tf_id
-    resource_type = "Microsoft.Network/privateDnsZones"
-    resource_config_json = jsonencode(merge(pdz, {
-      parent_name = "none"
-      name_config = {
-        values = {}
-      }
-
-      nc_bypass = pdz.name
-    }))
-    }
-  ]
-}
-
 locals {
-  private_dns_zone_map = {
-    for pdz in var.private_dns_zones : pdz.tf_id => merge(
-      pdz, {
-      }
-    )
-  }
+  private_dns_zone_map = { for pdz in var.private_dns_zones : pdz.tf_id => pdz }
 }
 
 resource "azurerm_private_dns_zone" "private_dns_zones" {

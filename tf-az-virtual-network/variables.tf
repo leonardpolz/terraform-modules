@@ -1,16 +1,10 @@
 variable "virtual_networks" {
   type = set(object({
-    tf_id = string
-
-    name_config = object({
-      name_segments = map(string)
-      parent_name   = optional(string)
-    })
-    nc_bypass = optional(string)
-
+    tf_id                   = string
+    name                    = string
     resource_group_name     = string
     address_space           = set(string)
-    location                = optional(string)
+    location                = string
     bgp_community           = optional(string)
     edge_zone               = optional(string)
     flow_timeout_in_minutes = optional(number)
@@ -28,14 +22,8 @@ variable "virtual_networks" {
     dns_servers = optional(set(string))
 
     subnets = optional(set(object({
-      tf_id = string
-
-      name_config = object({
-        name_segments = map(string)
-        parent_name   = optional(string)
-      })
-
-      nc_bypass                                     = optional(string)
+      tf_id                                         = string
+      name                                          = string
       address_prefixes                              = set(string)
       private_endpoint_network_policies_enabled     = optional(bool)
       private_link_service_network_policies_enabled = optional(bool)
@@ -43,12 +31,7 @@ variable "virtual_networks" {
       service_endpoint_policy_ids                   = optional(set(string))
 
       delegations = optional(list(object({
-        name_config = object({
-          name_segments = map(string)
-          parent_name   = optional(string)
-        })
-
-        nc_bypass = optional(string)
+        name = string
 
         service_delegation = object({
           name    = string
@@ -56,25 +39,14 @@ variable "virtual_networks" {
         })
       })))
 
-      network_security_group_settings = optional(object({
-        name_config = object({
-          name_segments = map(string)
-        })
-
-        nc_bypass = optional(string)
-
+      network_security_group_settings = object({
+        name                = string
         resource_group_name = optional(string)
         location            = optional(string)
 
         security_rules = optional(list(object({
-          tf_id = string
-
-          name_config = object({
-            name_segments = map(string)
-          })
-
-          nc_bypass = optional(string)
-
+          tf_id                                      = string
+          name                                       = string
           description                                = string
           protocol                                   = string
           source_port_range                          = optional(string)
@@ -104,7 +76,7 @@ variable "virtual_networks" {
           description                            = optional(string)
           skip_service_principal_aad_check       = optional(bool)
         })))
-      }))
+      })
 
       route_table_associations = optional(list(object({
         tf_id          = string
@@ -113,14 +85,8 @@ variable "virtual_networks" {
     })))
 
     virtual_network_peerings = optional(set(object({
-      tf_id = string
-
-      name_config = object({
-        name_segments = map(string)
-        parent_name   = optional(string)
-      })
-
-      nc_bypass                    = optional(string)
+      tf_id                        = string
+      name                         = string
       remote_virtual_network_id    = string
       allow_virtual_network_access = optional(bool)
       allow_forwarded_traffic      = optional(bool)

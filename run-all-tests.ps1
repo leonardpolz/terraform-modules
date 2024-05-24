@@ -7,6 +7,7 @@ foreach ($dir in $directories) {
     Write-Host "=============================="
     #terraform init
     if ($?) {
+        terraform fmt
         terraform test
     }
     else {

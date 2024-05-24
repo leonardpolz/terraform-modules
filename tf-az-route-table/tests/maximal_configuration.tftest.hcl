@@ -6,16 +6,7 @@ variables {
   route_tables = [
     {
       tf_id       = "test_route_table"
-      parent_name = "test-parent"
-
-      name_config = {
-        name_segments = {
-          workload_name = "example"
-          environment   = "tst"
-        }
-      }
-
-      nc_bypass = "test-route-table"
+      name        = "test-route-table"
 
       tags = {
         terraform_repository_uri = "https://github.com/leonardpolz/terraform-governance-framework-core-modules.git"
@@ -41,29 +32,14 @@ variables {
       routes = [
         {
           tf_id = "test_route"
-
-          name_config = {
-            name_segments = {
-              workload_name = "example"
-            }
-          }
-
-          nc_bypass = "test-route"
-
+          name = "test-route"
           address_prefix         = "0.0.0.1"
           next_hop_type          = "VirtualAppliance"
           next_hop_in_ip_address = "8.8.8.8"
         },
         {
           tf_id = "test_route_2"
-
-          name_config = {
-            name_segments = {
-              workload_name = "example"
-            }
-          }
-
-          nc_bypass = "test-route"
+          name = "test-route"
 
           address_prefix         = "0.0.0.1"
           next_hop_type          = "VirtualAppliance"
@@ -73,16 +49,7 @@ variables {
     },
     {
       tf_id       = "test_route_table_2"
-      parent_name = "test-parent"
-
-      name_config = {
-        name_segments = {
-          workload_name = "example"
-          environment   = "tst"
-        }
-      }
-
-      nc_bypass = "test-route-table"
+      name = "test-route-table"
 
       tags = {
         terraform_repository_uri = "https://github.com/leonardpolz/terraform-governance-framework-core-modules.git"
@@ -108,14 +75,7 @@ variables {
       routes = [
         {
           tf_id = "test_route"
-
-          name_config = {
-            name_segments = {
-              workload_name = "example"
-            }
-          }
-
-          nc_bypass = "test-route"
+          name = "test-route"
 
           address_prefix         = "0.0.0.1"
           next_hop_type          = "VirtualAppliance"
@@ -123,14 +83,7 @@ variables {
         },
         {
           tf_id = "test_route_2"
-
-          name_config = {
-            name_segments = {
-              workload_name = "example"
-            }
-          }
-
-          nc_bypass = "test-route"
+          name = "test-route"
 
           address_prefix         = "0.0.0.1"
           next_hop_type          = "VirtualAppliance"

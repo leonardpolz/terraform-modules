@@ -3,13 +3,9 @@ module "route_tables" {
   route_tables = [
     for key, sqlmi in local.managed_instance_map : merge(
       try(sqlmi.connectivity_settings.route_table_config, {}), {
-        tf_id = key
-        name_config = try(sqlmi.connectivity_settings.route_table_config.name_config, null) != null ? sqlmi.connectivity_settings.route_table_config.name_config : {
-          name_segments = {}
-          parent_name   = sqlmi.name
-        }
-
+        tf_id                         = key
         resource_group_name           = try(sqlmi.connectivity_settings.route_table_config.resource_group_name, null) != null ? sqlmi.connectivity_settings.route_table_config.resource_group_name : sqlmi.resource_group_name
+        location                      = try(sqlmi.connectivity_settings.route_table_config.location, null) != null ? sqlmi.connectivity_settings.route_table_config.location : sqlmi.location
         disable_bgp_route_propagation = false
     }) if try(sqlmi.connectivity_settings.subnet_id.bypass, null) == null
   ]
@@ -18,15 +14,10 @@ module "route_tables" {
 locals {
   sqlmi_subnet_configs = {
     for key, sqlmi in local.managed_instance_map : key => merge(
-      try(sqlmi.connectivity_settings.sqlmi_subnet_config, {}), {
+      sqlmi.connectivity_settings.sqlmi_subnet_config, {
         tf_id = key
-        name_config = {
-          name_segments = try(sqlmi.connectivity_settings.sqlmi_subnet_config.name_config.name_segments, null) != null ? sqlmi.connectivity_settings.sqlmi_subnet_config.name_config.name_segments : {}
-          parent_name   = sqlmi.name
-        }
-
         route_table_associations = concat(
-          try(sqlmi.connectivity_settings.sqlmi_subnet_config.route_table_associations, []), [
+          sqlmi.connectivity_settings.sqlmi_subnet_config.route_table_associations != null ? sqlmi.connectivity_settings.sqlmi_subnet_config.route_table_associations : [], [
             {
               tf_id          = "sqlmi_rt"
               route_table_id = module.route_tables.route_tables[key].id
@@ -35,15 +26,10 @@ locals {
         )
 
         delegations = concat(
-          try(sqlmi.connectivity_settings.sqlmi_subnet_config.delegations, []), [
+          sqlmi.connectivity_settings.sqlmi_subnet_config.delegations != null ? sqlmi.connectivity_settings.sqlmi_subnet_config.delegation : [], [
             {
               tf_id = "sqlmi_delegation"
-
-              name_config = {
-                name_segments = {}
-                parent_name   = sqlmi.name
-              }
-
+              name  = "del-default"
               service_delegation = {
                 name    = "Microsoft.Sql/managedInstances"
                 actions = ["Microsoft.Network/virtualNetworks/subnets/join/action", "Microsoft.Network/virtualNetworks/subnets/prepareNetworkPolicies/action", "Microsoft.Network/virtualNetworks/subnets/unprepareNetworkPolicies/action"]
@@ -62,15 +48,10 @@ module "virtual_networks" {
     for key, sqlmi in local.managed_instance_map : merge(
       try(sqlmi.connectivity_settings.virtual_network_config, {}), {
         tf_id = key
-        name_config = {
-          name_segments = try(sqlmi.connectivity_settings.virtual_network_config.name_config.name_segments, null) != null ? sqlmi.connectivity_settings.virtual_network_config.name_config.name_segments : {}
-          parent_name   = sqlmi.name
-        }
-
         subnets = [
           local.sqlmi_subnet_configs[key]
         ]
-
+        location            = try(sqlmi.connectivity_settings.virtual_network_config.location, null) != null ? sqlmi.connectivity_settings.virtual_network_config.location : sqlmi.location
         resource_group_name = try(sqlmi.connectivity_settings.virtual_network_config.resource_group_name, null) != null ? sqlmi.connectivity_settings.virtual_network_config.resource_group_name : sqlmi.resource_group_name
     }) if try(sqlmi.connectivity_settings.subnet_id.bypass, null) == null
   ]
@@ -97,16 +78,9 @@ module "private_endpoints" {
   private_endpoints = [
     for key, pep in local.private_endpoint_list : merge(
       pep.private_endpoint_config, {
-        tf_id = pep.tf_id
-
-        name_config = try(pep.private_endpoint_config.name_config, null) != null ? pep.private_endpoint_config.name_config : {
-          tf_id       = pep.tf_id
-          parent_name = azurerm_mssql_managed_instance.managed_instances[pep.sqlmi_tf_id].name
-        }
-
+        tf_id               = pep.tf_id
         resource_group_name = try(pep.private_endpoint_config.resource_group_name, null) != null ? pep.private_endpoint_config.resource_group_name : azurerm_mssql_managed_instance.managed_instances[pep.sqlmi_tf_id].resource_group_name
         location            = try(pep.private_endpoint_config.location, null) != null ? pep.private_endpoint_config.location : azurerm_mssql_managed_instance.managed_instances[pep.sqlmi_tf_id].location
-
 
         private_service_connection = merge(
           try(pep.private_endpoint_config.private_service_connection, {}), {
@@ -132,7 +106,7 @@ locals {
   ])
 }
 
-module "private_dns_zone" {
+module "private_dns_zones" {
   source = "../tf-az-private-dns-zone"
   private_dns_zones = [
     for key, pep in local.private_endpoint_list : merge(

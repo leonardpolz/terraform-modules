@@ -1,29 +1,5 @@
-module "configuration_interceptor" {
-  source = "../tf-governance-interceptor"
-  configurations = [for rt in var.route_tables : {
-    tf_id                = rt.tf_id
-    resource_type        = "Microsoft.Network/routeTables"
-    resource_config_json = jsonencode(rt)
-    }
-  ]
-}
-
 locals {
-  route_table_map = {
-    for rt in var.route_tables : rt.tf_id => merge(
-      rt, {
-        name     = module.configuration_interceptor.configuration_map[rt.tf_id].name
-        tags     = module.configuration_interceptor.configuration_map[rt.tf_id].tags
-        location = module.configuration_interceptor.configuration_map[rt.tf_id].location
-
-        routes = rt.routes != null ? [
-          for r in rt.routes : merge(
-            r, {
-              name = module.configuration_interceptor.configuration_map[rt.tf_id].routes[r.tf_id].name
-          })
-        ] : []
-    })
-  }
+  route_table_map = { for rt in var.route_tables : rt.tf_id => rt }
 }
 
 resource "azurerm_route_table" "route_tables" {
