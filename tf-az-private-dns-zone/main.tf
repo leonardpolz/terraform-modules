@@ -27,9 +27,8 @@ module "role_assignments" {
   role_assignments = flatten([
     for key, pdz in local.private_dns_zone_map : [
       for ra in pdz.role_assignments : merge(ra, {
-        tf_id       = ra.tf_id != null ? ra.tf_id : "${key}_${ra.principal_id}_${ra.role_definition_name != null ? replace(ra.role_definition_name, " ", "_") : ra.role_definition_id}"
-        parent_name = pdz.name
-        scope       = azurerm_private_dns_zone.private_dns_zones[key].id
+        tf_id = ra.tf_id != null ? ra.tf_id : "${key}_${ra.principal_id}_${ra.role_definition_name != null ? replace(ra.role_definition_name, " ", "_") : ra.role_definition_id}"
+        scope = azurerm_private_dns_zone.private_dns_zones[key].id
       })
     ] if pdz.role_assignments != null
   ])
