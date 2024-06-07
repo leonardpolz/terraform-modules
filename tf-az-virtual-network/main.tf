@@ -95,6 +95,8 @@ resource "azurerm_subnet_network_security_group_association" "network_security_g
   for_each                  = local.subnet_map
   subnet_id                 = azurerm_subnet.subnets[each.key].id
   network_security_group_id = module.network_security_groups.network_security_groups[each.key].id
+
+  depends_on = [module.network_security_groups]
 }
 
 locals {
