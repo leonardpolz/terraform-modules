@@ -1,6 +1,6 @@
 variable "firewall_rule_collection_groups" {
   type = set(object({
-    terraform_id       = string
+    tf_id              = string
     name               = string
     firewall_policy_id = string
     priority           = number

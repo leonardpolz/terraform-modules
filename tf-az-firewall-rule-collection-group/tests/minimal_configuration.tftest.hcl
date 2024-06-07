@@ -7,7 +7,7 @@ variables {
     tf_id = "test_frcg"
 
     name               = "test-frcg"
-    firewall_policy_id = "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/test-rg/providers/Microsoft.Network/azureFirewalls/test-fw/firewallPolicies/test-fwp"
+    firewall_policy_id = "/subscriptions/12345678-1234-9876-4563-123456789012/resourceGroups/example-resource-group/providers/Microsoft.Network/firewallPolicies/firewallPolicyValue"
     priority           = 100
   }]
 }
@@ -22,8 +22,8 @@ run "plan" {
   }
 
   assert {
-    condition     = azurerm_firewall_policy_rule_collection_group.rule_collection_groups["test_frcg"].firewall_policy_id == "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/test-rg/providers/Microsoft.Network/azureFirewalls/test-fw/firewallPolicies/test-fwp"
-    error_message = "Firewall policy ID '${azurerm_firewall_policy_rule_collection_group.rule_collection_groups["test_frcg"].firewall_policy_id}' does not match expected value '/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/test-rg/providers/Microsoft.Network/azureFirewalls/test-fw/firewallPolicies/test-fwp'"
+    condition     = azurerm_firewall_policy_rule_collection_group.rule_collection_groups["test_frcg"].firewall_policy_id == "/subscriptions/12345678-1234-9876-4563-123456789012/resourceGroups/example-resource-group/providers/Microsoft.Network/firewallPolicies/firewallPolicyValue"
+    error_message = "Firewall rule collection group firewall policy ID '${azurerm_firewall_policy_rule_collection_group.rule_collection_groups["test_frcg"].firewall_policy_id}' does not match expected value '/subscriptions/12345678-1234-9876-4563-123456789012/resourceGroups/example-resource-group/providers/Microsoft.Network/firewallPolicies/firewallPolicyValue'"
   }
 
   assert {
