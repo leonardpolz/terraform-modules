@@ -23,3 +23,33 @@ module "role_assignments" {
     ] if dnspr.role_assignments != null
   ])
 }
+
+locals {
+  inbound_endpoint_list = flatten([
+    for key, dnspr in local.private_dns_resolver_map : [
+      for ie in dnspr.inbound_endpoints != null ? dnspr.inbound_endpoints : [] : merge(
+        ie, {
+          tf_id       = "${key}_${ie.tf_id}"
+          dnspr_tf_id = key
+        }
+      )
+    ]
+  ])
+}
+
+resource "azurerm_private_dns_resolver_inbound_endpoint" "inbound_endpoints" {
+  for_each                = { for ie in local.inbound_endpoint_list : ie.tf_id => ie }
+  name                    = each.value.name
+  private_dns_resolver_id = resource.azurerm_private_dns_resolver.private_dns_resolvers[each.value.dnspr_tf_id].id
+  location                = resource.azurerm_private_dns_resolver.private_dns_resolvers[each.value.dnspr_tf_id].location
+  tags                    = each.value.tags
+
+  dynamic "ip_configurations" {
+    for_each = [each.value.ip_configurations]
+    content {
+      subnet_id                    = ip_configurations.value.subnet_id
+      private_ip_address           = ip_configurations.value.private_ip_address
+      private_ip_allocation_method = ip_configurations.value.private_ip_allocation_method
+    }
+  }
+}

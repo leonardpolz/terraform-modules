@@ -20,6 +20,19 @@ variable "private_dns_resolvers" {
       description                            = optional(string)
       skip_service_principal_aad_check       = optional(bool)
     })))
+
+    inbound_endpoints = optional(set(object({
+      tf_id = string
+
+      name = string
+      tags = optional(map(string))
+
+      ip_configurations = set(object({
+        subnet_id                    = string
+        private_ip_address           = optional(string)
+        private_ip_allocation_method = optional(string)
+      }))
+    })))
   }))
 
   default = []
