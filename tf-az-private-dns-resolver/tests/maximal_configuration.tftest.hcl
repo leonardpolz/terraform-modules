@@ -18,9 +18,8 @@ variables {
     }
 
     role_assignments = [{
-      principal_id                           = "00000000-0000-0000-0000-000000000000"
-      role_definition_id                     = "00000000-0000-0000-0000-000000000000"
-      delegated_managed_identity_resource_id = "00000000-0000-0000-0000-000000000000"
+      principal_id       = "00000000-0000-0000-0000-000000000000"
+      role_definition_id = "00000000-0000-0000-0000-000000000000"
     }]
 
     inbound_endpoints = [{
@@ -34,14 +33,13 @@ variables {
         hidden-title             = "Test Inbound Endpoint"
       }
 
-      ip_configurations = [
-        {
-          subnet_id                    = "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/test-rg/providers/Microsoft.Network/virtualNetworks/test-vnet/subnets/test-subnet"
-          private_ip_address           = "10.100.0.0"
-          private_ip_allocation_method = "Static"
-        }
-      ]
+      ip_configurations = {
+        subnet_id                    = "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/test-rg/providers/Microsoft.Network/virtualNetworks/test-vnet/subnets/test-subnet"
+        private_ip_address           = "10.100.0.0"
+        private_ip_allocation_method = "Static"
+      }
     }]
+  }]
 }
 
 run "plan" {

@@ -27,11 +27,11 @@ variable "private_dns_resolvers" {
       name = string
       tags = optional(map(string))
 
-      ip_configurations = set(object({
+      ip_configurations = object({
         subnet_id                    = string
         private_ip_address           = optional(string)
         private_ip_allocation_method = optional(string)
-      }))
+      })
     })))
   }))
 
